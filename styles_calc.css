@@ -1,0 +1,131 @@
+* {
+  background-color: rgb(30, 30, 30);
+}
+
+QLabel {
+  min-width: 300px;
+  max-height: 50px;
+  min-height: 50px;
+  font-size: 40px;
+  color: white;
+}
+QLabel#label_opir {
+     min-width: 300px;
+     min-height: 25px;
+     font-size: 25px;
+     color: rgb(100 ,100, 100);
+}
+
+QPushButton {
+  background-color: rgb(50, 50, 50);
+  color: white;
+  font-size: 20px;
+  min-height: 75px;
+  min-width: 80px;
+  border-radius: 37px;
+}
+
+QPushButton::hover {
+    background-color : rgb(38, 38, 38)
+}
+
+
+QComboBox {
+  color: white;
+  border-radius: 10%;
+  height: 30px;
+  padding-left: 10px;
+  font-size: 20px;
+  max-width: 200px;
+}
+
+
+
+QComboBox QListView {
+  border-radius: 10%;
+  padding: 5px;
+  background-color: white;
+  color: black;
+}
+
+QComboBox#history{
+  background: rgb(50, 50, 50);
+  color: white;
+  border-radius: 15px;
+  padding-left: 10px;
+  font-size: 17px;
+  min-height: 35px;
+  min-width: 35px;
+  max-width: 35px
+}
+QComboBox#history::hover{
+   background-color : rgb(38, 38, 38)
+}
+
+QPushButton#del {
+  background: rgb(30, 30, 30);
+  color: white;
+  border-radius: 15px;
+  padding-left: 5px;
+  font-size: 17px;
+  min-height: 35px;
+  min-width: 35px;
+  max-width: 35px
+}
+
+QPushButton#divid {
+    color:  rgb(50, 50, 50);
+    padding-left: 2px;
+    font-size: 1px;
+}
+QPushButton#divid::hover {color: rgb(38, 38, 38);}
+
+QPushButton#mul {
+    color:  rgb(50, 50, 50);
+    padding-left: 2px;
+    font-size: 1px;
+}
+QPushButton#mul::hover {color: rgb(38, 38, 38);}
+
+
+
+QPushButton#equally {background-color: #6666FF;}
+QPushButton#DelAll {color: #D92B4F;}
+
+
+
+QComboBox#history QListView {
+  border-radius: 10%;
+  padding: 5px;
+  background-color: white;
+  color: black;
+  min-width: 300px;
+}
+
+QLabel#label{
+  min-width: 250px;
+  min-height: 30px;
+  max-height: 70px;
+  max-width: 250px;
+  font-size: 30px;
+  color: white;
+  background: none;
+}
+
+QLineEdit {
+  background: black;
+  color: white;
+  font-size: 30px;
+  border: 1px solid aqua;
+  border-radius: 15px;
+
+}
+QSpinBox {
+    max-width: 35px;
+    max-height: 20px;
+    font-size: 17px;
+    color: white;
+}
+QWidget#windowHistory {
+   background: white;
+}
