@@ -2,13 +2,17 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 from function import numbers_flout, numbers_int, numbers_10
 from calc import Calc
-# ЭТОТ КЛАСС ПРЕДСТАВЛЯЕТ РЕАЛИЗАЦИЮ ФРЕЙМА "СИСТЕМЫ СЧИСЛЕНИЯ"
+
 class FrameSystemNumbers(Calc):
+
+    """ЭТОТ КЛАСС ПРЕДСТАВЛЯЕТ РЕАЛИЗАЦИЮ ФРЕЙМА "СИСТЕМЫ СЧИСЛЕНИЯ"""""
+
     def __init__(self, widgets, change_frame, box_main):
         super(FrameSystemNumbers, self).__init__(widgets, change_frame, box_main)
-        self.call_functions = {'CE': self.clear_all_result, '%': self.operations_with_percent, '=': self.operation, '+/-': self.revere}
+        self.call_functions = {'CE': self.clear_all_result, '%': self.operations_with_percent, '=': self.operation,
+                               '+/-': self.revere}
         self.styles_buttons = {'CE': ('', 'DelAll'), '=': ('', 'equally'),
-                       '/': ('icons/divid.png', 'divid'), 'x': ('icons/mul.png', 'mul')}
+                               '/': ('icons/divid.png', 'divid'), 'x': ('icons/mul.png', 'mul')}
 
         self.widgets_text = [('A', 'B', 'C', 'D', 'E', 'F'),
                              ('<<', '()', '7', '4', '1', '+/-'),
@@ -37,14 +41,14 @@ class FrameSystemNumbers(Calc):
         self.list_mod.activated.connect(self.change_frame)
 
     def clear_all(self):
-        'Удаляет весь текст у виджитах во фрейме2'
+        """Удаляет весь текст у виджитах во фрейме2"""
         self.label_output.clear()
         self.widgets['lines'][0].clear()
         self.widgets['lines'][1].clear()
         self.widgets['lines'][2].clear()
 
     def function_for_frame2(self):
-        '''Инициализурует функций по системам счисления'''
+        """Инициализурует функций по системам счисления"""
         number = self.widgets['lines'][0].text()  # число
         q = int(self.widgets['lines'][1].text())  # основане Ссч
         Nq = int(self.widgets['lines'][2].text())  # Ссч в которую нужно перевезти
@@ -57,4 +61,3 @@ class FrameSystemNumbers(Calc):
             result = numbers_10(number, q)
 
         self.label_output.setText(result)
-
