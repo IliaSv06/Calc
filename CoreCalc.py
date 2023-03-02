@@ -6,21 +6,21 @@ import History_Calc as hc
 from calc import Calc
 from systemNumbers import FrameSystemNumbers
 
-# ЯДРО ПРОЕКТА. ОНО СВЯЗЫВАЕТ МОДЫ КАЛЬКУЛЯТОРА (БАЗОВЫЙ И СИСТЕМЫ СЧИСЛЕНИЯ)
 class MainWindow(QWidget):
+    """ЯДРО ПРОЕКТА. ОНО СВЯЗЫВАЕТ МОДЫ КАЛЬКУЛЯТОРА (БАЗОВЫЙ И СИСТЕМЫ СЧИСЛЕНИЯ)"""
     def __init__(self, parent = None):
         super().__init__(parent)
         self.resize(350, 550)
         self.move(500, 20)
         self.setWindowTitle('Calc')
         self.widgets = {
-            'button' : [],
+            'button': [],
             'label_output': [],
             'list_mod': [],
-            'lines' : [],      # словарь для хранения всех активных виджитов
+            'lines': [],      # словарь для хранения всех активных виджитов
             'labels': [],
-            'list_history':[],
-            'line' : [],
+            'list_history': [],
+            'line': [],
             'spin_boxes': []
         }
         self.box_main = QVBoxLayout()
@@ -39,7 +39,7 @@ class MainWindow(QWidget):
                     self.widgets[widget].pop()
 
     def change_frame(self):
-        '''Мненяет фрейм у приложения'''
+        """Мненяет фрейм у приложения"""
         sender_text = self.widgets['list_mod'][-1].currentText()
         if sender_text == 'Калькулятор':
             self.widgets = self.calc.widgets
@@ -62,7 +62,7 @@ class MainWindow(QWidget):
             self.box_main = self.system_number_frame.box_main
 
     def keyPressEvent(self, event):
-        '''Завершает программу при нажатии Esc'''
+        """Завершает программу при нажатии Esc"""
         if event.key() == Qt.Key_Escape:
             sys.exit()
 
