@@ -9,6 +9,7 @@ QLabel {
   font-size: 40px;
   color: white;
 }
+
 QLabel#label_opir {
      min-width: 300px;
      min-height: 25px;
@@ -20,9 +21,10 @@ QPushButton {
   background-color: rgb(50, 50, 50);
   color: white;
   font-size: 20px;
-  min-height: 75px;
-  min-width: 80px;
-  border-radius: 37px;
+  min-height: 50px;
+  min-width: 70px;
+  border-radius: 5px;
+  max-height: 75px;
 }
 
 QPushButton::hover {
@@ -38,8 +40,6 @@ QComboBox {
   font-size: 20px;
   max-width: 200px;
 }
-
-
 
 QComboBox QListView {
   border-radius: 10%;
@@ -65,7 +65,6 @@ QComboBox#history::hover{
 QPushButton#del {
   background: rgb(30, 30, 30);
   color: white;
-  border-radius: 15px;
   padding-left: 5px;
   font-size: 17px;
   min-height: 35px;
@@ -86,8 +85,6 @@ QPushButton#mul {
     font-size: 1px;
 }
 QPushButton#mul::hover {color: rgb(38, 38, 38);}
-
-
 
 QPushButton#equally {background-color: #6666FF;}
 QPushButton#DelAll {color: #D92B4F;}
@@ -129,3 +126,15 @@ QSpinBox {
 QWidget#windowHistory {
    background: white;
 }
+
+QPushButton#resultNumbers{
+    background-color: #6666FF;
+    min-height: 107px;
+    max-height: 140px;
+    font-size: 40px;
+}
+
+
+
+
+

@@ -11,34 +11,52 @@ class FrameSystemNumbers(Calc):
         super(FrameSystemNumbers, self).__init__(widgets, change_frame, box_main)
         self.call_functions = {'CE': self.clear_all_result, '%': self.operations_with_percent, '=': self.operation,
                                '+/-': self.revere}
-        self.styles_buttons = {'CE': ('', 'DelAll'), '=': ('', 'equally'),
+        self.styles_buttons = {'CE': ('', 'DelAll'), '=': ('', 'resultNumbers'),
                                '/': ('icons/divid.png', 'divid'), 'x': ('icons/mul.png', 'mul')}
 
         self.widgets_text = [('A', 'B', 'C', 'D', 'E', 'F'),
                              ('<<', '()', '7', '4', '1', '+/-'),
                              ('>>', '', '8', '5', '2', '0'),
                              ('CE', '%', '9', '6', '3', '.'),
-                             ('', '/', 'x', '-', '+', '=')]
+                             ('/', 'x', '-', '+', '=')]
 
     def frame2(self):
-        pass
+        self.box_hr_top = QHBoxLayout() # будет хронить кнопку
         self.box_hr = QHBoxLayout()
         self.box_v_num = QVBoxLayout()
         self.box_numbers = QHBoxLayout()  # блок который хранит регулятор основания Ссч и окно вывода
-        self.make_opiration_label()
+        self.system_numbers = QSpinBox()
         self.make_buttons(self.widgets_text)
+        self.make_opiration_label()
+
+        # реализация регулятора Ссч
+        self.widgets['spin_boxes'].append(self.system_numbers)
+        self.system_numbers.setValue(10)
+        self.box_v_num.addWidget(self.widgets['spin_boxes'][-1])
+        self.box_v_num.setAlignment(Qt.AlignBottom)
+
+        # кнопка удаления
+        self.box_hr_top.addStretch()
+        self.box_hr_top.addWidget(self.widgets['button'][-1])
 
         self.list_mod.addItems(['Системы счисления', 'Калькулятор'])
-        self.box_numbers.addStretch()
-        self.box_numbers.addWidget(self.widgets['label_output'][-1])
 
+        self.box_numbers.addStretch()
+        self.box_numbers.addWidget(self.widgets['label_output'][-1], Qt.AlignRight)
+        self.box_numbers.addLayout(self.box_v_num, stretch=0)
+
+        # отображение всех виджитов
         self.box_main.addWidget(self.widgets['list_mod'][-1], Qt.AlignTop | Qt.AlignRight)
         self.box_main.addWidget(self.widgets['labels'][-1], Qt.AlignTop)
         self.box_main.addLayout(self.box_numbers)
+        self.box_main.addLayout(self.box_hr_top)
+        self.box_main.addWidget(self.widgets['line'][-1], Qt.AlignTop)
 
         self.box_main.addLayout(self.box_hr)
         self.box_main.setAlignment(Qt.AlignTop)
+
         self.list_mod.activated.connect(self.change_frame)
+        self.button_del.clicked.connect(self.clear_number)
 
     def clear_all(self):
         """Удаляет весь текст у виджитах во фрейме2"""

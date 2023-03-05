@@ -25,12 +25,10 @@ class Calc(QWidget):
 
     def frame1(self):
         """Мод - Калькулятор"""
-        self.button_del = QPushButton('')
         self.list_history = QComboBox()
         self.system_numbers = QSpinBox()
         self.system_numbers.setValue(10)
-        self.box_numbers = QHBoxLayout()  # блок который хранит регулятор основания Ссч и окно вывода
-        self.box_v_num = QVBoxLayout()
+        self.box_numbers = QHBoxLayout()  # блок который хранит окно вывода
         self.line = self.HLine()
         self.box_hr_top = QHBoxLayout()
         self.box_hr = QHBoxLayout()
@@ -46,7 +44,6 @@ class Calc(QWidget):
                                         " QComboBox::down-arrow {image: url(noimg); border-width: 0px;}")
         self.list_history.model().item(0).setEnabled(False)
         self.list_history.setObjectName('history')
-        self.button_del.setObjectName('del')
 
         # реализация иконки для кнопок
         self.icon_history = QIcon('icons/history.png')
@@ -59,19 +56,14 @@ class Calc(QWidget):
         # добаление созданных виджитов в список
         self.widgets['line'].append(self.line)
         self.widgets['list_history'].append(self.list_history)
-        self.widgets['button'].append(self.button_del)
-        self.widgets['spin_boxes'].append(self.system_numbers)
 
         self.box_hr_top.addWidget(self.widgets['list_history'][-1])
         self.box_hr_top.addStretch()
         self.box_hr_top.addWidget(self.widgets['button'][-1])
 
-        self.box_v_num.addWidget(self.widgets['spin_boxes'][-1])
-        self.box_v_num.setAlignment(Qt.AlignBottom)
-
         self.box_numbers.addStretch()
         self.box_numbers.addWidget(self.widgets['label_output'][-1])
-        self.box_numbers.addLayout(self.box_v_num, stretch=0)
+
 
         # отображение всех виджитов
         self.box_main.addWidget(self.widgets['list_mod'][-1], Qt.AlignTop | Qt.AlignRight)
@@ -88,17 +80,26 @@ class Calc(QWidget):
 
     def make_opiration_label(self):
         '''реализация верхней части калькулятора'''
+        self.button_del = QPushButton('')
         self.label_output = QLabel('')
         self.label_output_opiration = QLabel('')
         self.list_mod = QComboBox()
+        self.line = self.HLine() # сдесь горизонтальная линия
+
+        # реализация конпки удаления
+        self.button_del.setIcon(QIcon('icons/del.png'))
+        self.button_del.setIconSize(QSize(30, 30))
+        self.button_del.setObjectName('del')
 
         self.label_output.setAlignment(Qt.AlignTop | Qt.AlignRight)
         self.label_output_opiration.setAlignment(Qt.AlignCenter | Qt.AlignRight)
         self.label_output_opiration.setObjectName('label_opir')
 
+        self.widgets['line'].append(self.line)
         self.widgets['list_mod'].append(self.list_mod)
         self.widgets['labels'].append(self.label_output_opiration)
         self.widgets['label_output'].append(self.label_output)
+        self.widgets['button'].append(self.button_del)
 
     def make_buttons(self, widgets_sinvols):
         """Реализует кнопки"""
@@ -120,7 +121,7 @@ class Calc(QWidget):
             self.box_hr.addLayout(box_vertical)
 
     def HLine(self):
-        """Создает горизонтальную линию во frame1"""
+        """Создает горизонтальную линию во frame1 и frame2"""
         line = QFrame()
         line.setStyleSheet("background-color: #250250250")
         line.setFrameShape(QFrame.HLine)

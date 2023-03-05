@@ -10,7 +10,7 @@ class MainWindow(QWidget):
     """ЯДРО ПРОЕКТА. ОНО СВЯЗЫВАЕТ МОДЫ КАЛЬКУЛЯТОРА (БАЗОВЫЙ И СИСТЕМЫ СЧИСЛЕНИЯ)"""
     def __init__(self, parent = None):
         super().__init__(parent)
-        self.resize(350, 550)
+        self.resize(380, 550)
         self.move(500, 20)
         self.setWindowTitle('Calc')
         self.widgets = {
