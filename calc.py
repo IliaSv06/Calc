@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QIcon
+from variables import *
 import History_Calc as hc
 
 
@@ -11,8 +12,8 @@ class Calc(QWidget):
         self.widgets = widgets
         self.box_main = box_main
         self.change_frame = change_frame
-        self.list_operation = ['+', '-', '/', '//', 'x', '**', '.']
-        self.num = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
+        self.list_operation = list_operation
+        self.num = num
         self.open_brackets = 0  # открытые скобки
         self.widgets_sinvols = [('C', '7', '4', '1', '+/-'),
                                 ('()', '8', '5', '2', '0'),
