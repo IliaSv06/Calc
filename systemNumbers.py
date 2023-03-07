@@ -13,6 +13,7 @@ class FrameSystemNumbers(Calc):
                                '+/-': self.revere}
         self.styles_buttons = {'CE': ('', 'DelAll'), '=': ('', 'resultNumbers'),
                                '/': ('icons/divid.png', 'divid'), 'x': ('icons/mul.png', 'mul')}
+        self.signNumbers = ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F')
 
         self.widgets_text = [('A', 'B', 'C', 'D', 'E', 'F'),
                              ('<<', '()', '7', '4', '1', '+/-'),
@@ -54,16 +55,27 @@ class FrameSystemNumbers(Calc):
 
         self.box_main.addLayout(self.box_hr)
         self.box_main.setAlignment(Qt.AlignTop)
+        self.blockButtons()
 
         self.list_mod.activated.connect(self.change_frame)
         self.button_del.clicked.connect(self.clear_number)
+        self.system_numbers.valueChanged.connect(self.blockButtons)
 
-    def clear_all(self):
-        """Удаляет весь текст у виджитах во фрейме2"""
+    def blockButtons(self, number=10):
+        '''Блокирует кнопки с числами, которые неотносятся к данной системе счисления'''
         self.label_output.clear()
-        self.widgets['lines'][0].clear()
-        self.widgets['lines'][1].clear()
-        self.widgets['lines'][2].clear()
+        self.label_output_opiration.clear()
+        for button in self.widgets['button']:
+            # раздокирует кнопки предавая им исходный стиль
+            if button.text() in self.signNumbers[:number]:
+                button.setEnabled(True)
+                button.setStyleSheet("QPushButton {background-color: rgb(50, 50, 50); color: white;}"
+                                     "QPushButton::hover {background-color : rgb(38, 38, 38);}")
+            # блокирует кнопки
+            if button.text() in self.signNumbers[number:] and number != 16:
+                button.setStyleSheet('background-color: rgb(40, 40, 40); color: rgb(50, 50, 50);')
+                button.setEnabled(False)
+
 
     def function_for_frame2(self):
         """Инициализурует функций по системам счисления"""
