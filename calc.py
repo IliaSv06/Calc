@@ -150,11 +150,14 @@ class Calc(QWidget):
         try:
             if len(self.label_output.text()) == 0:
                 self.label_output.setText(self.label_output.text() + '√(')
+                self.open_brackets += 1
             elif len(self.label_output.text()) != 0:
                 if self.label_output.text()[-1] in self.list_operation or self.label_output.text()[-1] == '(':
                     self.label_output.setText(self.label_output.text() + '√(')
+                    self.open_brackets += 1
                 elif self.label_output.text()[-1] in self.num:
                     self.label_output.setText(self.label_output.text() + 'x√(')
+                    self.open_brackets += 1
         except:
             pass
 
@@ -322,8 +325,8 @@ class Calc(QWidget):
                     index_root = expression.index(sign)
                     if expression[index_root - 1] in self.num and index_root != 0:   # ставит перед корнем * если заним число
                         result += '*'
-                    root += '**0.5'
-
+                    root += '**0.5)'
+                    self.open_brackets -= 1
                 elif sign in self.num or sign in '()' or sign == '.':
                     result += sign
                 elif (sign in self.list_operation or sign in '()') and sign != '.':
