@@ -212,7 +212,11 @@ class Calc(QWidget):
             try:
                 expression = self.close_brackets()  # возращает выражение с заккрытими скобками (если есть как минимум одна)
                 expression = expression.replace('x', '*')
-                self.label_output_opiration.setText('=' + str(eval(expression)))
+                expression = self.rootExstration(expression)
+                result = eval(expression)
+                if isinstance(result, float):
+                    result = round(result, 4)
+                self.label_output_opiration.setText('=' + str(result))
             except:
                 pass
 
@@ -227,8 +231,12 @@ class Calc(QWidget):
             if len(self.label_output.text()) != 0:
                 self.label_output.setText(self.close_brackets())
                 self.open_brackets = 0
-                result = str(
-                    eval(self.label_output.text().replace('x', '*')))  # заменяет x на * для реализации операции
+                expression = self.label_output.text().replace('x', '*') # заменяет x на * для реализации операции
+                expression = self.rootExstration(expression)
+                result = eval(expression)
+                if isinstance(result, float):
+                    result = round(result, 4)
+                result = str(result)
                 hc.InsertData(self.label_output.text(), result)
                 self.label_output_opiration.setText(self.label_output.text() + '=')
                 self.label_output.clear()
@@ -284,3 +292,27 @@ class Calc(QWidget):
             if i in self.label_output.text():
                 return True
         return False
+
+    def rootExstration(self, expression : str):
+        '''Подготавливает выражение для извлечения корня'''
+        if '√' in expression:
+            result = ''
+            root = ''  # фиксирует нашедший корень (в виде **0.5)
+            expression = list(expression)
+            for sign in expression:
+                if sign == '√':
+                    index_root = expression.index(sign)
+                    if expression[index_root - 1] in self.num and index_root != 0:   # ставит перед корнем * если заним число
+                        result += '*'
+                    root += '**0.5'
+
+                elif sign in self.num or sign in '()' or sign == '.':
+                    result += sign
+                elif (sign in self.list_operation or sign in '()') and sign != '.':
+                    result += root + sign
+                    root = ''
+            if len(root) != 0:
+                result += root
+            return result
+        return expression
+
