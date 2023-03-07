@@ -33,7 +33,6 @@ def SelectData():
     """Возвращает список из картеджей вида:(решение, ответ, дата операции, время операции)"""
     with sql.connect('History.db') as con:
         cur = con.cursor()
-
         cur.execute("""
         SELECT decision, answer, date, time FROM history""")
         return [' '.join(x for x in i) for i in cur.fetchall()]

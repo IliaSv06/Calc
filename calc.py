@@ -17,7 +17,7 @@ class Calc(QWidget):
         self.open_brackets = 0  # открытые скобки
         self.widgets_sinvols = [('C', '7', '4', '1', '+/-'),
                                 ('()', '8', '5', '2', '0'),
-                                ('%', '9', '6', '3', '.'),
+                                ('√', '9', '6', '3', '.'),
                                 ('/', 'x', '-', '+', '=')]
         self.call_functions = {'C': self.clear_all_result, '%': self.operations_with_percent, '=': self.operation,
                                '+/-': self.revere}
@@ -134,6 +134,8 @@ class Calc(QWidget):
         sender = self.sender()  # определяет нажутю кнопку
         if sender.text() == '()':  # запустит функцию скобок
             self.brackets()
+        elif sender.text() == '√':
+            self.root_print()
         elif (sender.text() not in self.list_operation or len(self.label_output.text()) != 0) or sender.text() == '-':
             if len(self.label_output.text()) > 1:
                 if self.label_output.text()[-1] in self.list_operation and sender.text() in self.list_operation:
@@ -144,6 +146,18 @@ class Calc(QWidget):
             else:
                 self.label_output.setText(self.label_output.text() + sender.text())
 
+    def root_print(self):
+        try:
+            if len(self.label_output.text()) == 0:
+                self.label_output.setText(self.label_output.text() + '√(')
+            elif len(self.label_output.text()) != 0:
+                if self.label_output.text()[-1] in self.list_operation or self.label_output.text()[-1] == '(':
+                    self.label_output.setText(self.label_output.text() + '√(')
+                elif self.label_output.text()[-1] in self.num:
+                    self.label_output.setText(self.label_output.text() + 'x√(')
+        except:
+            pass
+
     def brackets(self):
         """Расставляет скобки"""
         try:
@@ -151,14 +165,18 @@ class Calc(QWidget):
                 self.label_output.setText('(')
                 self.open_brackets += 1
             elif len(self.label_output.text()) != 0:
-                if self.label_output.text()[-1] not in self.list_operation and self.open_brackets != 0 \
-                        and self.label_output.text()[-1] != '(':
+                if all([self.label_output.text()[-1] not in self.list_operation,
+                        self.open_brackets != 0,
+                        self.label_output.text()[-1] != '(']):
                     self.label_output.setText(self.label_output.text() + ')')
                     self.open_brackets -= 1
-                elif self.label_output.text()[-1] in self.num or self.label_output.text()[-1] == ')':
+                elif any([self.label_output.text()[-1] in self.num,
+                          self.label_output.text()[-1] == ')']):
                     self.label_output.setText(self.label_output.text() + 'x(')
                     self.open_brackets += 1
-                elif self.label_output.text()[-1] in self.list_operation or self.label_output.text()[-1] == '(':
+                elif any([self.label_output.text()[-1] in self.list_operation,
+                          self.label_output.text()[-1] == '(',
+                          self.label_output.text()[-1] == '√']):
                     self.label_output.setText(self.label_output.text() + '(')
                     self.open_brackets += 1
         except:
@@ -293,8 +311,8 @@ class Calc(QWidget):
                 return True
         return False
 
-    def rootExstration(self, expression : str):
-        '''Подготавливает выражение для извлечения корня'''
+    def rootExstration(self, expression: str):
+        """Подготавливает выражение для извлечения корня"""
         if '√' in expression:
             result = ''
             root = ''  # фиксирует нашедший корень (в виде **0.5)
