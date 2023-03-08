@@ -138,7 +138,9 @@ class Calc(QWidget):
             self.root_print()
         elif (sender.text() not in self.list_operation or len(self.label_output.text()) != 0) or sender.text() == '-':
             if len(self.label_output.text()) > 1:
-                if self.label_output.text()[-1] in self.list_operation and sender.text() in self.list_operation:
+                if all([self.label_output.text()[-1] in self.list_operation,
+                        sender.text() in self.list_operation,
+                        self.label_output.text()[-1] == '(']):
                     self.label_output.setText(self.label_output.text()[:-1] + sender.text())
                 else:
                     self.label_output.setText(self.label_output.text() + sender.text())
@@ -169,7 +171,7 @@ class Calc(QWidget):
                 self.open_brackets += 1
             elif len(self.label_output.text()) != 0:
                 if all([self.label_output.text()[-1] not in self.list_operation,
-                        self.open_brackets != 0,
+                        self.open_brackets >= 0,
                         self.label_output.text()[-1] != '(']):
                     self.label_output.setText(self.label_output.text() + ')')
                     self.open_brackets -= 1
@@ -185,9 +187,9 @@ class Calc(QWidget):
         except:
             pass
 
-    def close_brackets(self):
+    def close_brackets(self, expression):
         """Закрывает скобки для расчёта"""
-        return self.label_output.text() + ')' * self.open_brackets
+        return expression + ')' * self.open_brackets
 
     def revere(self):
         """Меняет знак последнего числа"""
@@ -231,11 +233,13 @@ class Calc(QWidget):
         """Автоматически вычисляет выражение"""
         if sender.text() not in self.list_operation and sender.text() != '()':
             try:
-                expression = self.close_brackets()  # возращает выражение с заккрытими скобками (если есть как минимум одна)
+                expression = self.rootExstration(self.label_output.text())
+                expression = self.close_brackets(expression)  # возращает выражение с заккрытими скобками (если есть как минимум одна)
                 expression = expression.replace('x', '*')
-                expression = self.rootExstration(expression)
                 result = eval(expression)
                 if isinstance(result, float):
+                    if result == int(result):
+                        result = int(result)
                     result = round(result, 4)
                 self.label_output_opiration.setText('=' + str(result))
             except:
@@ -250,12 +254,14 @@ class Calc(QWidget):
                 self.label_output.setText(self.label_output.text()[:-2])
                 self.open_brackets -= 1
             if len(self.label_output.text()) != 0:
-                self.label_output.setText(self.close_brackets())
-                self.open_brackets = 0
                 expression = self.label_output.text().replace('x', '*') # заменяет x на * для реализации операции
                 expression = self.rootExstration(expression)
+                self.label_output.setText(self.close_brackets(expression))
+                self.open_brackets = 0
                 result = eval(expression)
                 if isinstance(result, float):
+                    if result == int(result):
+                        result = int(result)
                     result = round(result, 4)
                 result = str(result)
                 hc.InsertData(self.label_output.text(), result)
@@ -326,7 +332,6 @@ class Calc(QWidget):
                     if expression[index_root - 1] in self.num and index_root != 0:   # ставит перед корнем * если заним число
                         result += '*'
                     root += '**0.5)'
-                    self.open_brackets -= 1
                 elif sign in self.num or sign in '()' or sign == '.':
                     result += sign
                 elif (sign in self.list_operation or sign in '()') and sign != '.':
@@ -334,6 +339,7 @@ class Calc(QWidget):
                     root = ''
             if len(root) != 0:
                 result += root
+            print(result, self.open_brackets)
             return result
         return expression
 
