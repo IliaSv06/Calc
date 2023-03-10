@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
-from function import numbers_flout, numbers_int, numbers_10
+from function import numbers_flout, numbers_int, numbers_10, conversion_expression, counting
 from calc import Calc
 
 class FrameSystemNumbers(Calc):
@@ -20,6 +20,7 @@ class FrameSystemNumbers(Calc):
                              ('>>', '√', '8', '5', '2', '0'),
                              ('CE', '%', '9', '6', '3', '.'),
                              ('/', 'x', '-', '+', '=')]
+        self.old_notation = 10
 
     def frame2(self):
         self.box_hr_top = QHBoxLayout() # будет хронить кнопку
@@ -62,9 +63,9 @@ class FrameSystemNumbers(Calc):
         self.system_numbers.valueChanged.connect(self.blockButtons)
 
     def blockButtons(self, number=10):
-        '''Блокирует кнопки с числами, которые неотносятся к данной системе счисления'''
-        self.label_output.clear()
-        self.label_output_opiration.clear()
+        """Блокирует кнопки с числами, которые неотносятся к данной системе счисления"""
+        self.convert()# больше я не знаю куда её пристроить
+        self.label_output_opiration.clear()#<-------------я не знаю что с этим делать
         for button in self.widgets['button']:
             # раздокирует кнопки предавая им исходный стиль
             if button.text() in self.signNumbers[:number]:
@@ -76,6 +77,17 @@ class FrameSystemNumbers(Calc):
                 button.setStyleSheet('background-color: rgb(40, 40, 40); color: rgb(50, 50, 50);')
                 button.setEnabled(False)
 
+    def convert(self):
+        """Меняет числа в выражении"""
+        self.label_output.setText(
+            conversion_expression(self.label_output.text(), self.old_notation, int(self.system_numbers.text())))#меняет текст в label_output
+        self.old_notation = int(self.system_numbers.text())#запоминает нынешнюю Ссч
+
+    #def eval_notation(self, expression, notation): #пытался придумать счёт
+    #    """Функция считает результат"""
+    #    self.label_output.setText(conversion_expression(expression, notation, 10))
+    #    self.operation()
+    #    self.label_output.setText(numbers_flout(eval(expression), self.system_numbers.text()))
 
     def function_for_frame2(self):
         """Инициализурует функций по системам счисления"""
