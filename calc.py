@@ -138,9 +138,7 @@ class Calc(QWidget):
             self.root_print()
         elif (sender.text() not in self.list_operation or len(self.label_output.text()) != 0) or sender.text() == '-':
             if len(self.label_output.text()) > 1:
-                if all([self.label_output.text()[-1] in self.list_operation,
-                        sender.text() in self.list_operation,
-                        self.label_output.text()[-1] == '(']):
+                if all([self.label_output.text()[-1] in self.list_operation, sender.text() in self.list_operation]):
                     self.label_output.setText(self.label_output.text()[:-1] + sender.text())
                 else:
                     self.label_output.setText(self.label_output.text() + sender.text())
@@ -154,7 +152,8 @@ class Calc(QWidget):
                 self.label_output.setText(self.label_output.text() + '√(')
                 self.open_brackets += 1
             elif len(self.label_output.text()) != 0:
-                if self.label_output.text()[-1] in self.list_operation or self.label_output.text()[-1] == '(':
+                if any([self.label_output.text()[-1] in self.list_operation, self.label_output.text()[-1] == '(',
+                       self.label_output.text()[-1] == '√(']):
                     self.label_output.setText(self.label_output.text() + '√(')
                     self.open_brackets += 1
                 elif self.label_output.text()[-1] in self.num:
@@ -171,7 +170,7 @@ class Calc(QWidget):
                 self.open_brackets += 1
             elif len(self.label_output.text()) != 0:
                 if all([self.label_output.text()[-1] not in self.list_operation,
-                        self.open_brackets >= 0,
+                        self.open_brackets > 0,
                         self.label_output.text()[-1] != '(']):
                     self.label_output.setText(self.label_output.text() + ')')
                     self.open_brackets -= 1
@@ -203,6 +202,7 @@ class Calc(QWidget):
 
         elif self.label_output.text()[-1] == ')':
             self.label_output.setText(self.label_output.text() + 'x(-')
+            self.open_brackets += 1
 
         elif len(self.label_output.text()) == 0:
             self.open_brackets += 1
@@ -221,7 +221,6 @@ class Calc(QWidget):
             while self.label_output.text()[i] in self.num:
                 i -= 1
             if self.label_output.text()[i - 1:i + 1] != '(-':
-                print(self.label_output.text()[i - 1:i + 1])
                 self.label_output.setText(self.label_output.text()[:i + 1] + '(-' + self.label_output.text()[i + 1:])
                 self.open_brackets += 1
 
@@ -233,13 +232,11 @@ class Calc(QWidget):
         """Автоматически вычисляет выражение"""
         if sender.text() not in self.list_operation and sender.text() != '()':
             try:
-                expression = self.rootExstration(self.label_output.text())
-                expression = self.close_brackets(expression)  # возращает выражение с заккрытими скобками (если есть как минимум одна)
+                expression = self.close_brackets(self.label_output.text())  # возращает выражение с заккрытими скобками (если есть как минимум одна)
                 expression = expression.replace('x', '*')
+                expression = self.rootExstration(expression)
                 result = eval(expression)
                 if isinstance(result, float):
-                    if result == int(result):
-                        result = int(result)
                     result = round(result, 4)
                 self.label_output_opiration.setText('=' + str(result))
             except:
@@ -255,13 +252,12 @@ class Calc(QWidget):
                 self.open_brackets -= 1
             if len(self.label_output.text()) != 0:
                 expression = self.label_output.text().replace('x', '*') # заменяет x на * для реализации операции
+                expression = self.close_brackets(expression)  # закрывает скобки если есть
                 expression = self.rootExstration(expression)
-                self.label_output.setText(self.close_brackets(expression))
+                self.label_output.setText(expression)
                 self.open_brackets = 0
                 result = eval(expression)
                 if isinstance(result, float):
-                    if result == int(result):
-                        result = int(result)
                     result = round(result, 4)
                 result = str(result)
                 hc.InsertData(self.label_output.text(), result)
@@ -306,6 +302,7 @@ class Calc(QWidget):
             self.open_brackets -= 1
         elif self.label_output.text()[-1] == ')':
             self.open_brackets += 1
+        print(self.open_brackets)
 
     def clear_all_result(self):
         """Отчищает виджеты от данных"""
@@ -324,22 +321,22 @@ class Calc(QWidget):
         """Подготавливает выражение для извлечения корня"""
         if '√' in expression:
             result = ''
-            root = ''  # фиксирует нашедший корень (в виде **0.5)
+            root = []  # фиксирует нашедший корень (в виде **0.5)
             expression = list(expression)
-            for sign in expression:
-                if sign == '√':
-                    index_root = expression.index(sign)
-                    if expression[index_root - 1] in self.num and index_root != 0:   # ставит перед корнем * если заним число
-                        result += '*'
-                    root += '**0.5)'
-                elif sign in self.num or sign in '()' or sign == '.':
-                    result += sign
-                elif (sign in self.list_operation or sign in '()') and sign != '.':
-                    result += root + sign
-                    root = ''
-            if len(root) != 0:
-                result += root
-            print(result, self.open_brackets)
+            for sign in range(len(expression)):
+                if expression[sign] == '(':
+                    if expression[sign - 1] == '√' and sign != 0:
+                        root.append('**0.5')
+                    else:
+                        root.append('')
+                    result += expression[sign]
+                elif expression[sign] == ')':
+                    result += expression[sign] + root[-1]
+                    root.pop(-1)
+                elif expression[sign] != '√':
+                    result += expression[sign]
             return result
+
         return expression
+
 

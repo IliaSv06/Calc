@@ -30,9 +30,11 @@ class FrameSystemNumbers(Calc):
         self.make_buttons(self.widgets_text)
         self.make_opiration_label()
 
+
         # реализация регулятора Ссч
         self.widgets['spin_boxes'].append(self.system_numbers)
         self.system_numbers.setValue(10)
+        self.number_first = self.system_numbers.value()
         self.box_v_num.addWidget(self.widgets['spin_boxes'][-1])
         self.box_v_num.setAlignment(Qt.AlignBottom)
 
@@ -75,7 +77,7 @@ class FrameSystemNumbers(Calc):
             if button.text() in self.signNumbers[number:] and number != 16:
                 button.setStyleSheet('background-color: rgb(40, 40, 40); color: rgb(50, 50, 50);')
                 button.setEnabled(False)
-
+        self.number_first = number
 
     def function_for_frame2(self):
         """Инициализурует функций по системам счисления"""
