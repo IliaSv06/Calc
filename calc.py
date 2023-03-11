@@ -142,7 +142,7 @@ class Calc(QWidget):
                     self.label_output.setText(self.label_output.text()[:-1] + sender.text())
                 else:
                     self.label_output.setText(self.label_output.text() + sender.text())
-                self.count_now(sender)  # запустит функцию автоматического вычисления
+                self.count_now()  # запустит функцию автоматического вычисления
             else:
                 self.label_output.setText(self.label_output.text() + sender.text())
 
@@ -228,19 +228,16 @@ class Calc(QWidget):
                 self.label_output.setText(self.label_output.text()[:i - 1] + self.label_output.text()[i + 1:])
                 self.open_brackets -= 1
 
-    def count_now(self, sender):
+    def count_now(self):
         """Автоматически вычисляет выражение"""
-        if sender.text() not in self.list_operation and sender.text() != '()':
-            try:
-                expression = self.close_brackets(self.label_output.text())  # возращает выражение с заккрытими скобками (если есть как минимум одна)
-                expression = expression.replace('x', '*')
-                expression = self.rootExstration(expression)
-                result = eval(expression)
-                if isinstance(result, float):
-                    result = round(result, 4)
-                self.label_output_opiration.setText('=' + str(result))
-            except:
-                pass
+        try:
+            expression = self.label_output.text().replace('x', '*')
+            result = self.metod_opiration(expression)
+            if isinstance(result, float):
+                result = round(result, 4)
+            self.label_output_opiration.setText('=' + str(result))
+        except:
+            pass
 
     def operation(self):
         """Запускает вычисление над выражением и фиксирует результат"""
@@ -252,11 +249,8 @@ class Calc(QWidget):
                 self.open_brackets -= 1
             if len(self.label_output.text()) != 0:
                 expression = self.label_output.text().replace('x', '*') # заменяет x на * для реализации операции
-                expression = self.close_brackets(expression)  # закрывает скобки если есть
-                expression = self.rootExstration(expression)
-                self.label_output.setText(expression)
-                self.open_brackets = 0
-                result = eval(expression)
+                result = self.metod_opiration(expression)
+                self.open_barckets = 0
                 if isinstance(result, float):
                     result = round(result, 4)
                 result = str(result)
@@ -271,6 +265,16 @@ class Calc(QWidget):
         except:
             pass
 
+    def metod_opiration(self, expression):
+        """Выбирает какой метод вычислений выбрать для определенных модов калькулятора"""
+        if self.list_mod.currentText() == 'Системы счисления':
+            result = self.eval_notation(expression)
+        else:
+            expression = self.close_brackets(expression)
+            expression = self.rootExstration(expression)
+            result = eval(expression)
+        return result
+
     def operations_with_percent(self):
         """Перевод в проценты"""
         try:
@@ -283,7 +287,6 @@ class Calc(QWidget):
             self.open_brackets = 0
 
     def clear_number(self):
-        sender = self.sender()
         """Удаляет один элемент текста из окна вывода и изменяет из-за этого вывод опрерации"""
         try:
             self.removing_brackets()  # удаление скобок
@@ -292,7 +295,7 @@ class Calc(QWidget):
                 self.label_output_opiration.setText('')
 
             elif self.label_output.text()[-1] not in self.list_operation:
-                self.count_now(sender)
+                self.count_now()
         except:
             pass
 
@@ -302,7 +305,6 @@ class Calc(QWidget):
             self.open_brackets -= 1
         elif self.label_output.text()[-1] == ')':
             self.open_brackets += 1
-        print(self.open_brackets)
 
     def clear_all_result(self):
         """Отчищает виджеты от данных"""

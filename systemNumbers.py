@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
-from function import numbers_flout, numbers_int, numbers_10
+from function import numbers_flout, numbers_int, numbers_10, conversion_expression, counting
 from calc import Calc
 
 class FrameSystemNumbers(Calc):
@@ -64,11 +64,13 @@ class FrameSystemNumbers(Calc):
         self.system_numbers.valueChanged.connect(self.blockButtons)
 
     def blockButtons(self, number=10):
-        '''Блокирует кнопки с числами, которые неотносятся к данной системе счисления'''
-        self.label_output.clear()
-        self.label_output_opiration.clear()
+        """Блокирует кнопки с числами, которые неотносятся к данной системе счисления"""
+        if number > 16 or number < 2:
+            self.system_numbers.setValue(self.number_first)
+            return None
+        self.convert(self.number_first)
         for button in self.widgets['button']:
-            # раздокирует кнопки предавая им исходный стиль
+            # разблокирует кнопки предавая им исходный стиль
             if button.text() in self.signNumbers[:number]:
                 button.setEnabled(True)
                 button.setStyleSheet("QPushButton {background-color: rgb(50, 50, 50); color: white;}"
@@ -77,19 +79,21 @@ class FrameSystemNumbers(Calc):
             if button.text() in self.signNumbers[number:] and number != 16:
                 button.setStyleSheet('background-color: rgb(40, 40, 40); color: rgb(50, 50, 50);')
                 button.setEnabled(False)
+        self.count_now()
         self.number_first = number
 
-    def function_for_frame2(self):
-        """Инициализурует функций по системам счисления"""
-        number = self.widgets['lines'][0].text()  # число
-        q = int(self.widgets['lines'][1].text())  # основане Ссч
-        Nq = int(self.widgets['lines'][2].text())  # Ссч в которую нужно перевезти
-        if q == 10:
-            if '.' in number:
-                result = numbers_flout(float(number), Nq)
-            else:
-                result = numbers_int(int(number), Nq)
-        elif Nq == 10:
-            result = numbers_10(number, q)
 
-        self.label_output.setText(result)
+    def convert(self, number):
+        """Меняет числа в выражении"""
+        self.label_output.setText(
+            conversion_expression(self.label_output.text(), number, int(self.system_numbers.text())))#меняет текст в label_output
+
+    def eval_notation(self, expression):
+        """Функция считает результат"""
+        notation = self.system_numbers.value()
+        expression = conversion_expression(expression, notation, 10) # переволит числа в выражении в нужную Ссч
+        expression = self.close_brackets(expression)
+        expression = self.rootExstration(expression)
+        expression_10 = eval(expression) # вычисляет выражение работая с десятичными числами
+        return numbers_flout(expression_10, notation)  # переводит результат в нужнную Ссч
+

@@ -76,5 +76,5 @@ if __name__ == '__main__':
     with open('styles_calc.css', 'r') as file_css:
         _style = file_css.read()
         app.setStyleSheet(_style)
-    
+
     sys.exit(app.exec_())
