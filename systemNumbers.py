@@ -92,8 +92,9 @@ class FrameSystemNumbers(Calc):
         """Функция считает результат"""
         notation = self.system_numbers.value()
         expression = conversion_expression(expression, notation, 10) # переволит числа в выражении в нужную Ссч
-        expression = self.close_brackets(expression)
-        expression = self.rootExstration(expression)
+        if '(' in expression or '√' in expression:
+            expression = self.close_brackets(expression)
+            expression = self.rootExstration(expression)
         expression_10 = eval(expression) # вычисляет выражение работая с десятичными числами
         return numbers_flout(expression_10, notation)  # переводит результат в нужнную Ссч
 

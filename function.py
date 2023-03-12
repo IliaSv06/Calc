@@ -5,20 +5,23 @@ def numbers_flout(number, numeral_system):
     """Переводит из 10-ной Ссч в другую (число дробное)"""
     if numeral_system > len(system_numbers):
         return None
+    # ищет минус в числе
+    check_minus = lambda number: '-' if '-' in str(number) else ''
+    minus = check_minus(number)
+
     number = abs(number) # число в модуле
-    num2 = float(number) - int(float(number))  # хранит дробную часть числа
     num1 = int(float(number))  # целая часть числа
+    num2 = float(number) - int(float(number))  # хранит дробную часть числа
     result_number = numbers_int(num1, numeral_system)  # переводит целую часть числа в другую Ссч
-    result_float_number = ''
-    limit = 0
+    result_float_number, limit = '', 0
     while num2 != 0 and limit <= 10:
         limit += 1
         result_float_number += system_numbers[int(num2 * numeral_system)]
         num2 = num2 * numeral_system - int(num2 * numeral_system)
-    if isinstance(number, float):
-        return f'{result_number}.{result_float_number}0'
-    return result_number
 
+    if isinstance(number, float):
+        return f'{minus}{result_number}.{result_float_number}0'
+    return minus + result_number
 
 def numbers_int(number, numeral_system):
     """Переводит из 10-ной Ссч в другую (число целое)"""
@@ -55,21 +58,20 @@ def conversion_expression(expression: str, notation_old: int= 10, notation_new: 
     if expression == '':
         return ''
     list_op = ['+', '-', '/', 'x', '*', ')']
-    new_expression = ''
-    number = ''
+    new_expression, number = '', ''  # переменные для нового выражения и регистрации нашедшего числа
+
     for index in range(len(expression)):
         if all([expression[index] in list_op, expression[index -1] in system_numbers, index != 0, len(number) != 0]):
             new_expression += str(conversion(number, notation_old, notation_new))
             new_expression += expression[index]
             number = ''
-        elif expression[index] in system_numbers:
+        elif expression[index] in system_numbers or expression[index] == '.':
             number += expression[index]
         else:
             new_expression += expression[index]
     if len(number) != 0:
         new_expression += str(conversion(number, notation_old, notation_new))
     return new_expression
-
 
 def counting(expression: str, notation: int):
     """Считает выражение"""

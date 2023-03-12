@@ -26,7 +26,7 @@ class MainWindow(QWidget):
         self.box_main = QVBoxLayout()
         self.calc = Calc(self.widgets, self.change_frame, self.box_main)
         self.system_number_frame = FrameSystemNumbers(self.widgets, self.change_frame, self.box_main)
-        self.new_frame_2()
+        self.new_frame_1()
         self.setLayout(self.box_main)
 
 
