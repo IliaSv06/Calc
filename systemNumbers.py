@@ -30,7 +30,6 @@ class FrameSystemNumbers(Calc):
         self.make_buttons(self.widgets_text)
         self.make_opiration_label()
 
-
         # реализация регулятора Ссч
         self.widgets['spin_boxes'].append(self.system_numbers)
         self.system_numbers.setValue(10)
@@ -49,14 +48,7 @@ class FrameSystemNumbers(Calc):
         self.box_numbers.addLayout(self.box_v_num, stretch=0)
 
         # отображение всех виджитов
-        self.box_main.addWidget(self.widgets['list_mod'][-1], Qt.AlignTop | Qt.AlignRight)
-        self.box_main.addWidget(self.widgets['labels'][-1], Qt.AlignTop)
-        self.box_main.addLayout(self.box_numbers)
-        self.box_main.addLayout(self.box_hr_top)
-        self.box_main.addWidget(self.widgets['line'][-1], Qt.AlignTop)
-
-        self.box_main.addLayout(self.box_hr)
-        self.box_main.setAlignment(Qt.AlignTop)
+        self.open_widgets()
         self.blockButtons()
 
         self.list_mod.activated.connect(self.change_frame)
@@ -95,6 +87,7 @@ class FrameSystemNumbers(Calc):
         if '(' in expression or '√' in expression:
             expression = self.close_brackets(expression)
             expression = self.rootExstration(expression)
+
         expression_10 = eval(expression) # вычисляет выражение работая с десятичными числами
         return numbers_flout(expression_10, notation)  # переводит результат в нужнную Ссч
 

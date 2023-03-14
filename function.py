@@ -3,8 +3,6 @@ from variables import *
 
 def numbers_flout(number, numeral_system):
     """Переводит из 10-ной Ссч в другую (число дробное)"""
-    if numeral_system > len(system_numbers):
-        return None
     # ищет минус в числе
     check_minus = lambda number: '-' if '-' in str(number) else ''
     minus = check_minus(number)
@@ -37,12 +35,14 @@ def numbers_int(number, numeral_system):
 def numbers_10(number, q):
     """Переводит в 10-ную Ссч"""
     number = list(str(number))
-    replace = 0
-    n = len(number) - 1
+    replace, n = 0, len(number)-1  # переменные для хранения результата и разрада числа
+
+    # проверка на дробность
+    if '.' in number:
+        n = len(number[0:number.index('.')]) - 1
+        number.remove('.')
+
     for i1 in number:
-        if '.' in number:
-            n = len(number[0:number.index('.')]) - 1
-            number.remove('.')
         opiration = int(i1, 16) * (q ** n)
         replace += opiration
         n -= 1
@@ -57,7 +57,7 @@ def conversion_expression(expression: str, notation_old: int= 10, notation_new: 
     """Переводит все числа в выражении в указанную Ссч"""
     if expression == '':
         return ''
-    list_op = ['+', '-', '/', 'x', '*', ')']
+    list_op = ('+', '-', '/', 'x', '*', ')')
     new_expression, number = '', ''  # переменные для нового выражения и регистрации нашедшего числа
 
     for index in range(len(expression)):

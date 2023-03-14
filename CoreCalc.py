@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtCore import Qt
 import sys
 import os
 import History_Calc as hc
@@ -31,7 +31,7 @@ class MainWindow(QWidget):
 
 
     def clear_widgets(self):
-        '''Очищает экран от виджетов'''
+        """Очищает экран от виджетов"""
         for widget in self.widgets:
             if self.widgets[widget] != []:
                 for i in range(0, len(self.widgets[widget])):
@@ -50,16 +50,19 @@ class MainWindow(QWidget):
             self.new_frame_2()
 
     def new_frame_1(self):
+        """Пререход в мод калькулятор"""
         for i in range(2):
             self.clear_widgets()
             self.calc.frame1()
             self.box_main = self.calc.box_main
+            self.calc.open_brackets = 0
 
     def new_frame_2(self):
-        for i in range(2):
-            self.clear_widgets()
-            self.system_number_frame.frame2()
-            self.box_main = self.system_number_frame.box_main
+        """Пререход в мод Системы счисления"""
+        self.clear_widgets()
+        self.system_number_frame.frame2()
+        self.box_main = self.system_number_frame.box_main
+        self.system_number_frame.open_brackets = 0
 
     def keyPressEvent(self, event):
         """Завершает программу при нажатии Esc"""
