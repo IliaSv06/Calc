@@ -16,8 +16,8 @@ class FrameSystemNumbers(Calc):
         self.signNumbers = ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F')
 
         self.widgets_text = [('A', 'B', 'C', 'D', 'E', 'F'),
-                             ('<<', '()', '7', '4', '1', '+/-'),
-                             ('>>', '√', '8', '5', '2', '0'),
+                             ('x²', '()', '7', '4', '1', '+/-'),
+                             ('xⁿ', '√', '8', '5', '2', '0'),
                              ('CE', '%', '9', '6', '3', '.'),
                              ('/', 'x', '-', '+', '=')]
 
@@ -78,7 +78,7 @@ class FrameSystemNumbers(Calc):
     def convert(self, number):
         """Меняет числа в выражении"""
         self.label_output.setText(
-            conversion_expression(self.label_output.text(), number, int(self.system_numbers.text())))#меняет текст в label_output
+            conversion_expression(self.label_output.text(), number, int(self.system_numbers.text())))  # меняет текст в label_output
 
     def eval_notation(self, expression):
         """Функция считает результат"""
@@ -88,6 +88,7 @@ class FrameSystemNumbers(Calc):
             expression = self.close_brackets(expression)
             expression = self.rootExstration(expression)
 
+        expression = expression.replace('^', '**')
         expression_10 = eval(expression) # вычисляет выражение работая с десятичными числами
         return numbers_flout(expression_10, notation)  # переводит результат в нужнную Ссч
 

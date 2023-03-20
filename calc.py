@@ -138,6 +138,9 @@ class Calc(QWidget):
             self.brackets()
         elif sender == '√':
             self.root_print()
+        elif sender == 'x²' or sender == 'xⁿ':
+            self.print_degree(sender)
+
         elif (sender not in self.list_operation or len(self.label_output.text()) != 0) or sender == '-':
             if len(self.label_output.text()) > 1:
                 if all([self.label_output.text()[-1] in self.list_operation, sender in self.list_operation]):
@@ -188,6 +191,24 @@ class Calc(QWidget):
                     self.open_brackets += 1
         except:
             pass
+    def print_degree(self, button):
+        """Печатает степень"""
+        opiration = self.label_output.text()
+        if len(opiration) == 0:
+            return None
+        elif button == 'x²':
+            if opiration[-1] in self.num or opiration[-1] == ')':
+                self.label_output.setText(opiration + '^(2)')
+            elif opiration[-1] in self.list_operation:
+                self.label_output.setText(opiration[:-1] + '^(2)')
+
+        elif button == 'xⁿ':
+            if opiration[-1] in self.num or opiration[-1] == ')':
+                self.label_output.setText(opiration + '^(')
+            elif opiration[-1] in self.list_operation:
+                self.label_output.setText(opiration[:-1] + '^(')
+            self.open_brackets += 1
+        self.count_now()
 
     def close_brackets(self, expression):
         """Закрывает скобки для расчёта"""
@@ -276,6 +297,7 @@ class Calc(QWidget):
         else:
             expression = self.close_brackets(expression)
             expression = self.rootExstration(expression)
+            expression = expression.replace('^', '**')
             result = eval(expression)
         return result
 
