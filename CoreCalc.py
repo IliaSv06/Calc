@@ -29,7 +29,6 @@ class MainWindow(QWidget):
         self.new_frame_1()
         self.setLayout(self.box_main)
 
-
     def clear_widgets(self):
         """Очищает экран от виджетов"""
         for widget in self.widgets:
