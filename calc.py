@@ -142,9 +142,11 @@ class Calc(QWidget):
             self.label_output.setText(opiration + sender)
 
         elif len(opiration) > 0 and sender in num:
-            if opiration[-1] in '√':
+            if opiration[-1] == '√':
                 self.label_output.setText(opiration + '(' + sender)
                 self.open_brackets += 1
+            elif opiration[-1] == ')':
+                self.label_output.setText(opiration + 'x' + sender)
             else:
                 self.label_output.setText(opiration + sender)
 
@@ -212,12 +214,13 @@ class Calc(QWidget):
             elif opiration[-1] in self.list_operation:
                 self.label_output.setText(opiration[:-1] + '^(2)')
 
-        elif button == 'xⁿ':
+        elif button == 'xⁿ' and opiration[-1] != '(':
             if opiration[-1] in self.num or opiration[-1] == ')':
                 self.label_output.setText(opiration + '^(')
             elif opiration[-1] in self.list_operation:
                 self.label_output.setText(opiration[:-1] + '^(')
             self.open_brackets += 1
+
         self.count_now()
 
     def close_brackets(self, expression):
@@ -289,21 +292,23 @@ class Calc(QWidget):
     def operation(self):
         """Запускает вычисление над выражением и фиксирует результат"""
         try:
-            opitation = self.label_output.text()
-            if opitation[-1] in self.list_operation or opitation[-1] == '.':
-                self.label_output.setText(opitation[:-1])
-            elif opitation[-1] == '(':
-                self.label_output.setText(opitation[:-2])
+            opiration = self.label_output.text()
+            if opiration[-1] in self.list_operation:
+                self.label_output.setText(opiration[:-1])
+            elif opiration[-1] == '(':
+                self.label_output.setText(opiration[:-2])
                 self.open_brackets -= 1
-            if len(opitation) != 0:
-                expression = opitation.replace('x', '*') # заменяет x на * для вычисления
+            if len(opiration) != 0:
+                opiration = self.label_output.text()
+                expression = opiration.replace('x', '*') # заменяет x на * для вычисления
                 result = self.metod_opiration(expression)
                 self.open_barckets = 0
                 if isinstance(result, float):
                     result = round(result, 4)
                 result = str(result)
-                hc.InsertData(opitation, result)
-                self.label_output_opiration.setText(opitation + '=')
+                hc.InsertData(opiration, result)
+                opiration = self.close_brackets(opiration)
+                self.label_output_opiration.setText(opiration + '=')
                 self.label_output.clear()
                 self.label_output.setText(result)
                 self.list_history.clear()
@@ -312,7 +317,6 @@ class Calc(QWidget):
                 self.list_history.setIconSize(QSize(20, 20))
         except:
             pass
-
 
     def operations_with_percent(self):
         """Перевод в проценты"""

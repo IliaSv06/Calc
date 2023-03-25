@@ -89,7 +89,6 @@ class FrameSystemNumbers(Calc):
             expression = self.rootExstration(expression)
 
         expression = expression.replace('^', '**')
-        print(expression)
         expression_10 = eval(expression) # вычисляет выражение работая с десятичными числами
         return numbers_flout(expression_10, notation)  # переводит результат в нужнную Ссч
 
