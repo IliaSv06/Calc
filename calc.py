@@ -26,7 +26,6 @@ class Calc(QWidget):
 
     def frame1(self):
         """Мод - Калькулятор"""
-        self.list_history = QComboBox()
         self.system_numbers = QSpinBox()
         self.system_numbers.setValue(10)
         self.box_numbers = QHBoxLayout()  # блок который хранит окно вывода
@@ -40,24 +39,11 @@ class Calc(QWidget):
         # реализация верхней части калькулятора
         self.make_opiration_label()
         self.list_mod.addItems(['Калькулятор', 'Системы счисления'])
-        self.list_history.addItems([''] + hc.SelectData())
-        self.list_history.setStyleSheet("QComboBox::drop-down {border-width: 0px;}"
-                                        " QComboBox::down-arrow {image: url(noimg); border-width: 0px;}")
-        self.list_history.model().item(0).setEnabled(False)
-        self.list_history.setObjectName('history')
 
         # реализация иконки для кнопок
-        self.icon_history = QIcon('icons/history.png')
-        self.list_history.setItemIcon(0, self.icon_history)
-        self.list_history.setIconSize(QSize(20, 20))
-
         self.button_del.setIcon(QIcon('icons/del.png'))
         self.button_del.setIconSize(QSize(30, 30))
 
-        # добаление созданных виджитов в список
-        self.widgets['list_history'].append(self.list_history)
-
-        self.box_hr_top.addWidget(self.widgets['list_history'][-1])
         self.box_hr_top.addStretch()
         self.box_hr_top.addWidget(self.widgets['button'][-1])
 
