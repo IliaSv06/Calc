@@ -57,7 +57,7 @@ def conversion_expression(expression: str, notation_old: int= 10, notation_new: 
     """Переводит все числа в выражении в указанную Ссч"""
     if expression == '':
         return ''
-    list_op = ('+', '-', '/', 'x', '*', ')')
+    list_op = ('+', '-', '/', 'x', '*', ')', '^')
     new_expression, number = '', ''  # переменные для нового выражения и регистрации нашедшего числа
 
     for index in range(len(expression)):

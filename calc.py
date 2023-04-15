@@ -20,13 +20,12 @@ class Calc(QWidget):
                                 ('√', '9', '6', '3', '.'),
                                 ('/', 'x', '-', '+', '=')]
         self.call_functions = {'C': self.clear_all_result, '%': self.operations_with_percent, '=': self.operation,
-                               '+/-': self.revere}
+                               '+/-': self.revere, '()': self.brackets, '√': self.root_print}
         self.styles_buttons = {'C': ('', 'DelAll'), '=': ('', 'equally'),
                                '/': ('icons/divid.png', 'divid'), 'x': ('icons/mul.png', 'mul')}
 
     def frame1(self):
         """Мод - Калькулятор"""
-        self.list_history = QComboBox()
         self.system_numbers = QSpinBox()
         self.system_numbers.setValue(10)
         self.box_numbers = QHBoxLayout()  # блок который хранит окно вывода
@@ -40,24 +39,11 @@ class Calc(QWidget):
         # реализация верхней части калькулятора
         self.make_opiration_label()
         self.list_mod.addItems(['Калькулятор', 'Системы счисления'])
-        self.list_history.addItems([''] + hc.SelectData())
-        self.list_history.setStyleSheet("QComboBox::drop-down {border-width: 0px;}"
-                                        " QComboBox::down-arrow {image: url(noimg); border-width: 0px;}")
-        self.list_history.model().item(0).setEnabled(False)
-        self.list_history.setObjectName('history')
 
         # реализация иконки для кнопок
-        self.icon_history = QIcon('icons/history.png')
-        self.list_history.setItemIcon(0, self.icon_history)
-        self.list_history.setIconSize(QSize(20, 20))
-
         self.button_del.setIcon(QIcon('icons/del.png'))
         self.button_del.setIconSize(QSize(30, 30))
 
-        # добаление созданных виджитов в список
-        self.widgets['list_history'].append(self.list_history)
-
-        self.box_hr_top.addWidget(self.widgets['list_history'][-1])
         self.box_hr_top.addStretch()
         self.box_hr_top.addWidget(self.widgets['button'][-1])
 
@@ -134,19 +120,34 @@ class Calc(QWidget):
     def write_number(self):
         """Выводит число"""
         sender = self.sender().text()  # определяет нажутю кнопку
-        if sender == '()':  # запустит функцию скобок
-            self.brackets()
-        elif sender == '√':
-            self.root_print()
-        elif (sender not in self.list_operation or len(self.label_output.text()) != 0) or sender == '-':
-            if len(self.label_output.text()) > 1:
-                if all([self.label_output.text()[-1] in self.list_operation, sender in self.list_operation]):
-                    self.label_output.setText(self.label_output.text()[:-1] + sender)
-                else:
-                    self.label_output.setText(self.label_output.text() + sender)
-                self.count_now()  # запустит функцию автоматического вычисления
+        opiration = self.label_output.text()
+        if sender == 'x²' or sender == 'xⁿ':
+            self.print_degree(sender)
+
+        elif len(opiration) == 0 and sender not in list_operation:
+            self.label_output.setText(opiration + sender)
+
+        elif len(opiration) > 0 and sender in num:
+            if opiration[-1] == '√':
+                self.label_output.setText(opiration + '(' + sender)
+                self.open_brackets += 1
+            elif opiration[-1] == ')':
+                self.label_output.setText(opiration + 'x' + sender)
             else:
-                self.label_output.setText(self.label_output.text() + sender)
+                self.label_output.setText(opiration + sender)
+
+        elif len(opiration) > 0 and sender in list_operation:
+            if opiration[-1] in list_operation and opiration[-2] in '(√' and sender in list_operation[:3]:
+                self.label_output.setText(opiration[:-1])
+            elif opiration[-1] in list_operation:
+                self.label_output.setText(opiration[:-1] + sender)
+
+            elif opiration[-1] in '(√' and sender in list_operation[:3]:
+                return None
+            else:
+                self.label_output.setText(opiration + sender)
+
+        self.count_now()  # запустит функцию автоматического вычисления
 
     def root_print(self):
         """Выводит корень на экран"""
@@ -189,46 +190,80 @@ class Calc(QWidget):
         except:
             pass
 
+    def print_degree(self, button):
+        """Печатает степень"""
+        opiration = self.label_output.text()
+        if len(opiration) == 0:
+            return None
+        elif button == 'x²':
+            if opiration[-1] in self.num or opiration[-1] == ')':
+                self.label_output.setText(opiration + '^(2)')
+            elif opiration[-1] in self.list_operation:
+                self.label_output.setText(opiration[:-1] + '^(2)')
+
+        elif button == 'xⁿ' and opiration[-1] != '(':
+            if opiration[-1] in self.num or opiration[-1] == ')':
+                self.label_output.setText(opiration + '^(')
+            elif opiration[-1] in self.list_operation:
+                self.label_output.setText(opiration[:-1] + '^(')
+            self.open_brackets += 1
+
+        self.count_now()
+
+    def open_bracket(self, opiration):         # <------------------ разрабатывается (эта функция служит для обработки выражения)
+        """Открывет скобку перед числом"""
+        if not self.synvol_search():
+            print('(' + opiration)
+        index = 0
+        for item in opiration:
+            if item in list_operation and item not in  '.^':
+                break
+            index += 1
+        index += 1
+        print((opiration[:index] + '(' + opiration[index:]))
+
+
     def close_brackets(self, expression):
         """Закрывает скобки для расчёта"""
         return expression + ')' * self.open_brackets
 
     def revere(self):
         """Меняет знак последнего числа"""
-        if len(self.label_output.text()) == 0:
+        opiration = self.label_output.text()
+        if len(opiration) == 0:
             self.open_brackets += 1
             self.label_output.setText('(-')
 
-        elif self.label_output.text()[-2:] == '(-':
-            self.label_output.setText(self.label_output.text()[:-2])
+        elif opiration[-2:] == '(-':
+            self.label_output.setText(opiration[:-2])
             self.open_brackets -= 1
 
-        elif self.label_output.text()[:2] == '(-':
-            self.label_output.setText(self.label_output.text()[2:])
+        elif opiration[:2] == '(-':
+            self.label_output.setText(opiration[2:])
             self.open_brackets -= 1
 
-        elif self.label_output.text()[-1] == ')':
-            self.label_output.setText(self.label_output.text() + 'x(-')
+        elif opiration[-1] == ')':
+            self.label_output.setText(opiration + 'x(-')
             self.open_brackets += 1
 
         elif not self.synvol_search():  # если оператор не содержится в выражении (только для числа)
-            self.label_output.setText(f'(-{self.label_output.text()}')
+            self.label_output.setText(f'(-{opiration}')
             self.open_brackets += 1
 
-        elif self.label_output.text()[-1] in self.list_operation:
-            self.label_output.setText(self.label_output.text() + '(-')
+        elif opiration[-1] in self.list_operation and opiration[-1] != '.':
+            self.label_output.setText(opiration + '(-')
             self.open_brackets += 1
 
-        elif self.label_output.text()[-1] in self.num:  # добавляет знак перед числом если есть операторы в выражении
+        elif opiration[-1] in self.num:  # добавляет знак перед числом если есть операторы в выражении
             i = -1
-            while self.label_output.text()[i] in self.num:
+            while opiration[i] in self.num:
                 i -= 1
-            if self.label_output.text()[i - 1:i + 1] != '(-':
-                self.label_output.setText(self.label_output.text()[:i + 1] + '(-' + self.label_output.text()[i + 1:])
+            if opiration[i - 1:i + 1] != '(-':
+                self.label_output.setText(opiration[:i + 1] + '(-' + opiration[i + 1:])
                 self.open_brackets += 1
 
-            elif self.label_output.text()[i - 1:i + 1] == '(-':
-                self.label_output.setText(self.label_output.text()[:i - 1] + self.label_output.text()[i + 1:])
+            elif opiration[i - 1:i + 1] == '(-':
+                self.label_output.setText(opiration[:i - 1] + opiration[i + 1:])
                 self.open_brackets -= 1
         self.count_now()
 
@@ -243,23 +278,37 @@ class Calc(QWidget):
         except:
             pass
 
+    def metod_opiration(self, expression : str):
+        """Выбирает какой метод вычислений выбрать для определенных модов калькулятора"""
+        if self.list_mod.currentText() == 'Системы счисления':
+            result = self.eval_notation(expression)
+        else:
+            expression = self.close_brackets(expression)
+            expression = self.rootExstration(expression)
+            expression = expression.replace('^', '**')
+            result = eval(expression)
+        return result
+
     def operation(self):
         """Запускает вычисление над выражением и фиксирует результат"""
         try:
-            if self.label_output.text()[-1] in self.list_operation or self.label_output.text()[-1] == '.':
-                self.label_output.setText(self.label_output.text()[:-1])
-            elif self.label_output.text()[-1] == '(':
-                self.label_output.setText(self.label_output.text()[:-2])
+            opiration = self.label_output.text()
+            if opiration[-1] in self.list_operation:
+                self.label_output.setText(opiration[:-1])
+            elif opiration[-1] == '(':
+                self.label_output.setText(opiration[:-2])
                 self.open_brackets -= 1
-            if len(self.label_output.text()) != 0:
-                expression = self.label_output.text().replace('x', '*') # заменяет x на * для реализации операции
+            if len(opiration) != 0:
+                opiration = self.label_output.text()
+                expression = opiration.replace('x', '*') # заменяет x на * для вычисления
                 result = self.metod_opiration(expression)
                 self.open_barckets = 0
                 if isinstance(result, float):
                     result = round(result, 4)
                 result = str(result)
-                hc.InsertData(self.label_output.text(), result)
-                self.label_output_opiration.setText(self.label_output.text() + '=')
+                hc.InsertData(opiration, result)
+                opiration = self.close_brackets(opiration)
+                self.label_output_opiration.setText(opiration + '=')
                 self.label_output.clear()
                 self.label_output.setText(result)
                 self.list_history.clear()
@@ -268,16 +317,6 @@ class Calc(QWidget):
                 self.list_history.setIconSize(QSize(20, 20))
         except:
             pass
-
-    def metod_opiration(self, expression : str):
-        """Выбирает какой метод вычислений выбрать для определенных модов калькулятора"""
-        if self.list_mod.currentText() == 'Системы счисления':
-            result = self.eval_notation(expression)
-        else:
-            expression = self.close_brackets(expression)
-            expression = self.rootExstration(expression)
-            result = eval(expression)
-        return result
 
     def operations_with_percent(self):
         """Перевод в проценты"""
@@ -291,7 +330,7 @@ class Calc(QWidget):
             self.open_brackets = 0
 
     def clear_number(self):
-        """Удаляет один элемент текста из окна вывода и изменяет из-за этого вывод опрерации"""
+        """Удаляет один элемент текста"""
         try:
             self.removing_brackets()  # удаление скобок
             self.label_output.setText(self.label_output.text()[:-1:])
@@ -319,7 +358,7 @@ class Calc(QWidget):
     def synvol_search(self):
         """Ищет оператор(+ / - *) в тексте виджита"""
         for i in self.list_operation:
-            if i in self.label_output.text():
+            if i in self.label_output.text() and i not in '.^':
                 return True
         return False
 
@@ -333,10 +372,11 @@ class Calc(QWidget):
             for sign in range(len(expression)):
                 if expression[sign] == '(':
                     if expression[sign - 1] == '√' and sign != 0:
-                        root.append('**0.5')
+                        root.append('**0.5)')
                     else:
-                        root.append('')
-                    result += expression[sign]
+                        root.append(')')
+                    result += expression[sign] + '('
+
                 elif expression[sign] == ')':
                     result += expression[sign] + root[-1]
                     root.pop(-1)
