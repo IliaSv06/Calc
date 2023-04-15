@@ -189,6 +189,7 @@ class Calc(QWidget):
                     self.open_brackets += 1
         except:
             pass
+
     def print_degree(self, button):
         """Печатает степень"""
         opiration = self.label_output.text()
@@ -208,6 +209,19 @@ class Calc(QWidget):
             self.open_brackets += 1
 
         self.count_now()
+
+    def open_bracket(self, opiration):         # <------------------ разрабатывается (эта функция служит для обработки выражения)
+        """Открывет скобку перед числом"""
+        if not self.synvol_search():
+            print('(' + opiration)
+        index = 0
+        for item in opiration:
+            if item in list_operation and item not in  '.^':
+                break
+            index += 1
+        index += 1
+        print((opiration[:index] + '(' + opiration[index:]))
+
 
     def close_brackets(self, expression):
         """Закрывает скобки для расчёта"""
@@ -236,7 +250,7 @@ class Calc(QWidget):
             self.label_output.setText(f'(-{opiration}')
             self.open_brackets += 1
 
-        elif opiration[-1] in self.list_operation:
+        elif opiration[-1] in self.list_operation and opiration[-1] != '.':
             self.label_output.setText(opiration + '(-')
             self.open_brackets += 1
 
@@ -344,7 +358,7 @@ class Calc(QWidget):
     def synvol_search(self):
         """Ищет оператор(+ / - *) в тексте виджита"""
         for i in self.list_operation:
-            if i in self.label_output.text():
+            if i in self.label_output.text() and i not in '.^':
                 return True
         return False
 
