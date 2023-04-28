@@ -29,6 +29,9 @@ class MainWindow(QWidget):
         self.new_frame_1()
         self.setLayout(self.box_main)
 
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+
     def clear_widgets(self):
         """Очищает экран от виджетов"""
         for widget in self.widgets:
@@ -74,7 +77,6 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
-
     with open('styles_calc.css', 'r') as file_css:
         _style = file_css.read()
         app.setStyleSheet(_style)
