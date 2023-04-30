@@ -90,7 +90,7 @@ class Calc(QWidget):
         self.scroll.setWidgetResizable(True)
         self.scroll.setMaximumHeight(70)
         self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
 
         self.widgets['line'].append(self.line)
         self.widgets['list_mod'].append(self.list_mod)

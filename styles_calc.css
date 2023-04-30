@@ -13,11 +13,12 @@ QScrollArea {
     border: none;
 }
 QScrollBar:horizontal {
-    border: none;
-    background-color: black;
+        height: 10px; /* высота полоски */
+        background: #000000; /* цвет фона */
+
 }
 QScrollBar::handle:horizontal {
-    background-color: green;
+    background-color: white;
     border: none;
 
 }
