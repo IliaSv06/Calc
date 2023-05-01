@@ -47,7 +47,6 @@ class Calc(QWidget):
         self.box_hr_top.addStretch()
         self.box_hr_top.addWidget(self.widgets['button'][-1])
 
-        self.box_numbers.addStretch()
         self.box_numbers.addWidget(self.widgets['label_output'][-1])
 
         # отображение всех виджитов
@@ -70,6 +69,8 @@ class Calc(QWidget):
     def make_opiration_label(self):
         """Реализация верхней части калькулятора"""
         self.button_del = QPushButton('')
+        self.scroll = QScrollArea()
+        self.scroll_bar = self.scroll.horizontalScrollBar()
         self.label_output = QLabel('')
         self.label_output_opiration = QLabel('')
         self.list_mod = QComboBox()
@@ -84,10 +85,17 @@ class Calc(QWidget):
         self.label_output_opiration.setAlignment(Qt.AlignCenter | Qt.AlignRight)
         self.label_output_opiration.setObjectName('label_opir')
 
+        #реализация виджита прокрутки текста в виджите label
+        self.scroll.setWidget(self.label_output)
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setMaximumHeight(70)
+        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+
         self.widgets['line'].append(self.line)
         self.widgets['list_mod'].append(self.list_mod)
         self.widgets['labels'].append(self.label_output_opiration)
-        self.widgets['label_output'].append(self.label_output)
+        self.widgets['label_output'].append(self.scroll)
         self.widgets['button'].append(self.button_del)
 
     def make_buttons(self, widgets_sinvols):
@@ -147,6 +155,8 @@ class Calc(QWidget):
             else:
                 self.label_output.setText(opiration + sender)
 
+        self.label_output.adjustSize()
+        self.scroll_bar.setValue(self.scroll_bar.maximum())
         self.count_now()  # запустит функцию автоматического вычисления
 
     def root_print(self):
@@ -163,6 +173,8 @@ class Calc(QWidget):
                 elif self.label_output.text()[-1] in self.num:
                     self.label_output.setText(self.label_output.text() + 'x√(')
                     self.open_brackets += 1
+            self.label_output.adjustSize()
+            self.scroll_bar.setValue(self.scroll_bar.maximum())
         except:
             pass
 
@@ -187,6 +199,8 @@ class Calc(QWidget):
                           self.label_output.text()[-1] == '√']):
                     self.label_output.setText(self.label_output.text() + '(')
                     self.open_brackets += 1
+            self.label_output.adjustSize()
+            self.scroll_bar.setValue(self.scroll_bar.maximum())
         except:
             pass
 
@@ -208,20 +222,9 @@ class Calc(QWidget):
                 self.label_output.setText(opiration[:-1] + '^(')
             self.open_brackets += 1
 
+        self.label_output.adjustSize()
+        self.scroll_bar.setValue(self.scroll_bar.maximum())
         self.count_now()
-
-    def open_bracket(self, opiration):         # <------------------ разрабатывается (эта функция служит для обработки выражения)
-        """Открывет скобку перед числом"""
-        if not self.synvol_search():
-            print('(' + opiration)
-        index = 0
-        for item in opiration:
-            if item in list_operation and item not in  '.^':
-                break
-            index += 1
-        index += 1
-        print((opiration[:index] + '(' + opiration[index:]))
-
 
     def close_brackets(self, expression):
         """Закрывает скобки для расчёта"""
@@ -256,7 +259,7 @@ class Calc(QWidget):
 
         elif opiration[-1] in self.num:  # добавляет знак перед числом если есть операторы в выражении
             i = -1
-            while opiration[i] in self.num:
+            while opiration[i] in self.num or opiration[i] == '.':
                 i -= 1
             if opiration[i - 1:i + 1] != '(-':
                 self.label_output.setText(opiration[:i + 1] + '(-' + opiration[i + 1:])
@@ -265,6 +268,8 @@ class Calc(QWidget):
             elif opiration[i - 1:i + 1] == '(-':
                 self.label_output.setText(opiration[:i - 1] + opiration[i + 1:])
                 self.open_brackets -= 1
+        self.label_output.adjustSize()
+        self.scroll_bar.setValue(self.scroll_bar.maximum())
         self.count_now()
 
     def count_now(self):
@@ -272,8 +277,6 @@ class Calc(QWidget):
         try:
             expression = self.label_output.text().replace('x', '*')
             result = self.metod_opiration(expression)
-            if isinstance(result, float):
-                result = round(result, 4)
             self.label_output_opiration.setText('=' + str(result))
         except:
             pass
@@ -282,11 +285,17 @@ class Calc(QWidget):
         """Выбирает какой метод вычислений выбрать для определенных модов калькулятора"""
         if self.list_mod.currentText() == 'Системы счисления':
             result = self.eval_notation(expression)
+            return result
         else:
             expression = self.close_brackets(expression)
             expression = self.rootExstration(expression)
             expression = expression.replace('^', '**')
             result = eval(expression)
+
+        if int(result) == result:
+            result = int(result)
+        elif isinstance(result, float):
+            result = round(result, 4)
         return result
 
     def operation(self):
@@ -303,18 +312,12 @@ class Calc(QWidget):
                 expression = opiration.replace('x', '*') # заменяет x на * для вычисления
                 result = self.metod_opiration(expression)
                 self.open_barckets = 0
-                if isinstance(result, float):
-                    result = round(result, 4)
                 result = str(result)
                 hc.InsertData(opiration, result)
                 opiration = self.close_brackets(opiration)
                 self.label_output_opiration.setText(opiration + '=')
                 self.label_output.clear()
                 self.label_output.setText(result)
-                self.list_history.clear()
-                self.list_history.addItems([''] + hc.SelectData())
-                self.list_history.setItemIcon(0, self.icon_history)
-                self.list_history.setIconSize(QSize(20, 20))
         except:
             pass
 
@@ -332,8 +335,10 @@ class Calc(QWidget):
     def clear_number(self):
         """Удаляет один элемент текста"""
         try:
+            expression = self.label_output.text()
             self.removing_brackets()  # удаление скобок
-            self.label_output.setText(self.label_output.text()[:-1:])
+            self.label_output.setText(expression[:-1:])
+
             if len(self.label_output.text()) == 0:
                 self.label_output_opiration.setText('')
 

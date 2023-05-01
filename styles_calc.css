@@ -3,11 +3,24 @@
 }
 
 QLabel {
-  min-width: 300px;
   max-height: 50px;
   min-height: 50px;
   font-size: 40px;
   color: white;
+}
+
+QScrollArea {
+    border: none;
+}
+QScrollBar:horizontal {
+        height: 10px; /* высота полоски */
+        background: #000000; /* цвет фона */
+
+}
+QScrollBar::handle:horizontal {
+    background-color: white;
+    border: none;
+
 }
 
 QLabel#label_opir {
@@ -133,9 +146,5 @@ QPushButton#resultNumbers{
     max-height: 140px;
     font-size: 40px;
 }
-
-
-
-
 
 

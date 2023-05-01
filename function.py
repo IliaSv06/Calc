@@ -4,9 +4,10 @@ from variables import *
 def numbers_flout(number, numeral_system):
     """Переводит из 10-ной Ссч в другую (число дробное)"""
     # ищет минус в числе
+    if isinstance(number, complex):
+        return ''
     check_minus = lambda number: '-' if '-' in str(number) else ''
     minus = check_minus(number)
-
     number = abs(number) # число в модуле
     num1 = int(float(number))  # целая часть числа
     num2 = float(number) - int(float(number))  # хранит дробную часть числа
