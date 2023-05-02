@@ -14,11 +14,11 @@ QScrollArea {
 }
 QScrollBar:horizontal {
         height: 10px; /* высота полоски */
-        background: #000000; /* цвет фона */
+        background-color: white; /* цвет фона */
 
 }
 QScrollBar::handle:horizontal {
-    background-color: white;
+    background: gray;
     border: none;
 
 }
@@ -135,7 +135,10 @@ QSpinBox {
     max-height: 20px;
     font-size: 17px;
     color: white;
+    background-color: black;
+
 }
+
 QWidget#windowHistory {
    background: white;
 }
