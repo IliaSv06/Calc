@@ -302,11 +302,10 @@ class Calc(QWidget):
         """Запускает вычисление над выражением и фиксирует результат"""
         try:
             opiration = self.label_output.text()
-            if opiration[-1] in self.list_operation:
-                self.label_output.setText(opiration[:-1])
-            elif opiration[-1] == '(':
-                self.label_output.setText(opiration[:-2])
-                self.open_brackets -= 1
+            if opiration[-1] in self.list_operation or opiration[-1] == '(':
+                new_expression = self.check_opiration(opiration)
+                self.label_output.setText(new_expression)
+
             if len(opiration) != 0:
                 opiration = self.label_output.text()
                 expression = opiration.replace('x', '*') # заменяет x на * для вычисления
@@ -320,6 +319,7 @@ class Calc(QWidget):
                 self.label_output.setText(result)
         except:
             pass
+
 
     def operations_with_percent(self):
         """Перевод в проценты"""
@@ -366,6 +366,20 @@ class Calc(QWidget):
             if i in self.label_output.text() and i not in '.^':
                 return True
         return False
+
+    def check_opiration(self, expression):
+        """Удаляет последние опираторы в выражении """
+        index = 0 # индекс опиратора
+        for el in reversed(expression):  # вычисляет индекс где заканчиваются опираторы
+            if el == '(':
+                index -= 1
+                self.open_brackets -= 1
+            elif el in list_operation or el == '√':
+                index -= 1
+            elif el in system_numbers or el == ')':
+                break
+        return expression[:index]
+
 
     def rootExstration(self, expression: str):
         """Подготавливает выражение для извлечения корня"""
