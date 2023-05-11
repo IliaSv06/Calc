@@ -78,3 +78,11 @@ def counting(expression: str, notation: int):
     """Считает выражение"""
     return eval(conversion_expression(expression, notation, 10))
 
+def filter(input: str, notation: int = 10):
+    if input == '*':
+        return 'x'
+    if input in list_operation or input in num[:notation]:
+        return input
+    else:
+        return ''
+print(filter("*"), filter('5'), filter('A', 12))
