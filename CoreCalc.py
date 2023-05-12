@@ -29,9 +29,6 @@ class MainWindow(QWidget):
         self.new_frame_1()
         self.setLayout(self.box_main)
 
-    def resizeEvent(self, event):
-        super().resizeEvent(event)
-
     def clear_widgets(self):
         """Очищает экран от виджетов"""
         for widget in self.widgets:
@@ -70,6 +67,7 @@ class MainWindow(QWidget):
         """Завершает программу при нажатии Esc"""
         if event.key() == Qt.Key_Escape:
             sys.exit()
+
 
 if __name__ == '__main__':
     if not os.path.isfile('History.db'):

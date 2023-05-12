@@ -127,7 +127,7 @@ class Calc(QWidget):
 
     def write_number(self):
         """Выводит число"""
-        sender = self.sender().text()  # определяет нажутю кнопку
+        sender = self.sender().text() # определяет нажутю кнопку
         opiration = self.label_output.text()
         if sender == 'x²' or sender == 'xⁿ':
             self.print_degree(sender)
