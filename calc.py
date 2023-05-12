@@ -125,10 +125,11 @@ class Calc(QWidget):
         line.setFrameShadow(QFrame.Sunken)
         return line
 
-    def write_number(self):
+    def write_number(self, sign = None):
         """Выводит число"""
-        sender = self.sender().text() # определяет нажутю кнопку
+        sender = sign if sign else self.sender().text() # определяет нажутю кнопку
         opiration = self.label_output.text()
+        
         if sender == 'x²' or sender == 'xⁿ':
             self.print_degree(sender)
 

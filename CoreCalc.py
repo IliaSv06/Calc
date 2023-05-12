@@ -5,6 +5,8 @@ import os
 import History_Calc as hc
 from calc import Calc
 from systemNumbers import FrameSystemNumbers
+from variables import *
+from function import filter
 
 class MainWindow(QWidget):
     """ЯДРО ПРОЕКТА. ОНО СВЯЗЫВАЕТ МОДЫ КАЛЬКУЛЯТОРА (БАЗОВЫЙ И СИСТЕМЫ СЧИСЛЕНИЯ)"""
@@ -64,10 +66,33 @@ class MainWindow(QWidget):
         self.system_number_frame.open_brackets = 0
 
     def keyPressEvent(self, event):
-        """Завершает программу при нажатии Esc"""
+        """Печатает данные, полученные от нажатых кномпок клавиатуры"""
+        sender_text = self.widgets['list_mod'][-1].currentText()
         if event.key() == Qt.Key_Escape:
             sys.exit()
 
+        elif event.text() in list_operation or event.text() in num:
+            if sender_text == "Калькулятор":
+                sign = filter(event.text())
+                if sign:
+                    self.calc.write_number(sign)
+            else:
+                number = self.system_number_frame.system_numbers.value() # основание Ссч 
+                sign = filter(event.text(), number)
+                if sign:
+                    self.system_number_frame.write_number(sign)
+
+        elif event.text() in '()' and event.key() not in limit_buttons:
+            if sender_text == "Калькулятор":
+                self.calc.brackets()
+            else:
+                self.system_number_frame.brackets()
+
+        elif event.key() == Qt.Key_Backspace:
+            if sender_text == "Калькулятор":
+                self.calc.clear_number()
+            else:
+                self.system_number_frame.clear_number()
 
 if __name__ == '__main__':
     if not os.path.isfile('History.db'):

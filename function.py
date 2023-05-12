@@ -81,8 +81,8 @@ def counting(expression: str, notation: int):
 def filter(input: str, notation: int = 10):
     if input == '*':
         return 'x'
-    if input in list_operation or input in num[:notation]:
+    elif input in list_operation or input in num[:notation]:
         return input
     else:
         return ''
-print(filter("*"), filter('5'), filter('A', 12))
+
