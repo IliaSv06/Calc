@@ -30,6 +30,7 @@ class MainWindow(QWidget):
         self.system_number_frame = FrameSystemNumbers(self.widgets, self.change_frame, self.box_main)
         self.new_frame_1()
         self.setLayout(self.box_main)
+        self.setFocus() # фокусировка на окно приложения (чтобы была возможность печать текст с клавиатуры)
 
     def clear_widgets(self):
         """Очищает экран от виджетов"""
@@ -49,6 +50,8 @@ class MainWindow(QWidget):
         elif sender_text == 'Системы счисления':
             self.widgets = self.system_number_frame.widgets
             self.new_frame_2()
+
+        self.setFocus() 
 
     def new_frame_1(self):
         """Пререход в мод калькулятор"""

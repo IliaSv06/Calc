@@ -54,6 +54,7 @@ class FrameSystemNumbers(Calc):
         self.list_mod.activated.connect(self.change_frame)
         self.button_del.clicked.connect(self.clear_number)
         self.system_numbers.valueChanged.connect(self.blockButtons)
+        
 
     def blockButtons(self, number=10):
         """Блокирует кнопки с числами, которые неотносятся к данной системе счисления"""
