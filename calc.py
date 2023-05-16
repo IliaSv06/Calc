@@ -311,7 +311,7 @@ class Calc(QWidget):
                 opiration = self.label_output.text()
                 expression = opiration.replace('x', '*') # заменяет x на * для вычисления
                 result = self.metod_opiration(expression)
-                self.open_barckets = 0
+                self.open_brackets = 0
                 result = str(result)
                 hc.InsertData(opiration, result)
                 opiration = self.close_brackets(opiration)

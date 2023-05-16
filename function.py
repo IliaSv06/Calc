@@ -13,13 +13,13 @@ def numbers_flout(number, numeral_system):
     num2 = float(number) - int(float(number))  # хранит дробную часть числа
     result_number = numbers_int(num1, numeral_system)  # переводит целую часть числа в другую Ссч
     result_float_number, limit = '', 0
-    while num2 != 0 and limit <= 10:
+    while num2 != 0 and limit <= 5:
         limit += 1
         result_float_number += system_numbers[int(num2 * numeral_system)]
         num2 = num2 * numeral_system - int(num2 * numeral_system)
-
-    if isinstance(number, float):
-        return f'{minus}{result_number}.{result_float_number}0'
+    
+    if result_float_number:
+        return f'{minus}{result_number}.{result_float_number}'
     return minus + result_number
 
 def numbers_int(number, numeral_system):
