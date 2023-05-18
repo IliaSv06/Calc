@@ -87,9 +87,11 @@ def filter(input: str, notation: int = 10):
         return ''
 
 def last_number(expression):
-    for index, digit in enumerate(expression[::-1]):
-        if not digit in num:
-            if not expression[::-1].index(digit) >= 15:
-                return True
-            return False
-
+    new_expression = expression[::-1]
+    index = 0
+    for digit in new_expression:
+        if digit in num:
+            index += 1
+        elif digit not in num and digit != '.':
+            break
+    return False if index >= 15 else True

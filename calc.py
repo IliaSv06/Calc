@@ -3,7 +3,7 @@ from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QIcon
 from variables import *
 import History_Calc as hc
-
+from function import last_number
 
 class Calc(QWidget):
     """ЭТОТ КЛАСС РЕАЛИЗУЕТ БАЗОВЫЙ МОД КАЛЬКУЛЯТОРА"""
@@ -136,7 +136,7 @@ class Calc(QWidget):
         elif len(opiration) == 0 and sender not in list_operation:
             self.label_output.setText(opiration + sender)
 
-        elif len(opiration) > 0 and sender in num:
+        elif len(opiration) > 0 and sender in num and last_number(opiration):
             if opiration[-1] == '√':
                 self.label_output.setText(opiration + '(' + sender)
                 self.open_brackets += 1
