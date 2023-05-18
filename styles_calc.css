@@ -131,28 +131,12 @@ QLineEdit {
 
 }
 QSpinBox {
-    max-width: 35px;
-    max-height: 20px;
+    max-width: 43px;
+    max-height: 30px;
     font-size: 17px;
     color: white;
-    background-color: black;
-
-}
-
-QSpinBox::up-arrow {
-    subcontrol-origin: padding;
-    subcontrol-position: top right;
-    width: 16px;
-    height: 16px;
-    color: black;
-}
-
-QSpinBox::down-arrow {
-    subcontrol-origin: padding;
-    subcontrol-position: bottom right;
-    width: 16px;
-    height: 16px;
-    color: black;
+    background-color: rgb(25, 25, 25);
+    border: gray;
 }
 
 

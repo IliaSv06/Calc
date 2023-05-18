@@ -26,7 +26,7 @@ def InsertData(decision, answer):
             VALUES ('{str(decision)}', '{str(answer)}', '{str(date.today())}', '{str(time.strftime('%H.%M.%S'))}')
             """)
     except:
-        print('Ошибка в добавлении данных')
+        pass
 
 
 def SelectData():
