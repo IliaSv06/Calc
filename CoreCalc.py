@@ -80,8 +80,8 @@ class MainWindow(QWidget):
                 if sign:
                     self.calc.write_number(sign)
             else:
-                number = self.system_number_frame.system_numbers.value() # основание Ссч 
-                sign = filter(event.text(), number)
+                number = self.system_number_frame.system_numbers.currentText() # основание Ссч 
+                sign = filter(event.text(), int(number))
                 if sign:
                     self.system_number_frame.write_number(sign)
 

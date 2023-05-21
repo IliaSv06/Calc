@@ -20,20 +20,25 @@ class FrameSystemNumbers(Calc):
                              ('xⁿ', '√', '8', '5', '2', '0'),
                              ('CE', '%', '9', '6', '3', '.'),
                              ('/', 'x', '-', '+', '=')]
+        self.num_sys = ['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16']
 
     def frame2(self):
         self.box_hr_top = QHBoxLayout() # будет хронить кнопку
         self.box_hr = QHBoxLayout()
         self.box_v_num = QVBoxLayout()
         self.box_numbers = QHBoxLayout()  # блок который хранит регулятор основания Ссч и окно вывода
-        self.system_numbers = QSpinBox()
+        self.system_numbers = QComboBox()
         self.make_buttons(self.widgets_text)
         self.make_opiration_label()
 
         # реализация регулятора Ссч
         self.widgets['spin_boxes'].append(self.system_numbers)
-        self.system_numbers.setValue(10)
-        self.number_first = self.system_numbers.value()
+        self.system_numbers.addItems(self.num_sys)
+        self.system_numbers.setCurrentText('10')
+        self.system_numbers.setObjectName('sysNum')
+        self.system_numbers.setView(QListView())
+        self.system_numbers.view().setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.number_first = int(self.system_numbers.currentText())
         self.box_v_num.addWidget(self.widgets['spin_boxes'][-1])
         self.box_v_num.setAlignment(Qt.AlignBottom)
 
@@ -53,14 +58,12 @@ class FrameSystemNumbers(Calc):
 
         self.list_mod.activated.connect(self.change_frame)
         self.button_del.clicked.connect(self.clear_number)
-        self.system_numbers.valueChanged.connect(self.blockButtons)
+        self.system_numbers.activated.connect(self.blockButtons)
         
 
-    def blockButtons(self, number=10):
+    def blockButtons(self):
         """Блокирует кнопки с числами, которые неотносятся к данной системе счисления"""
-        if number > 16 or number < 2:
-            self.system_numbers.setValue(self.number_first)
-            return None
+        number = int(self.system_numbers.currentText())
         self.convert(self.number_first)
         for button in self.widgets['button']:
             # разблокирует кнопки предавая им исходный стиль
@@ -79,11 +82,11 @@ class FrameSystemNumbers(Calc):
     def convert(self, number):
         """Меняет числа в выражении"""
         self.label_output.setText(
-            conversion_expression(self.label_output.text(), number, int(self.system_numbers.text())))  # меняет текст в label_output
+            conversion_expression(self.label_output.text(), number, int(self.system_numbers.currentText())))  # меняет текст в label_output
 
     def eval_notation(self, expression):
         """Функция считает результат"""
-        notation = self.system_numbers.value()
+        notation = int(self.system_numbers.currentText())
         expression = conversion_expression(expression, notation, 10) # переволит числа в выражении в нужную Ссч
         if '(' in expression or '√' in expression:
             expression = self.close_brackets(expression)

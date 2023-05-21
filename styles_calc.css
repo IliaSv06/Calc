@@ -10,24 +10,22 @@ QLabel {
 }
 
 QScrollArea {
-    border: none;
+  border: none;
 }
 QScrollBar:horizontal {
-        height: 10px; /* высота полоски */
-        background-color: white; /* цвет фона */
-
+  height: 10px; /* высота полоски */
+  background-color: white; /* цвет фона */
 }
 QScrollBar::handle:horizontal {
-    background: gray;
-    border: none;
-
+  background: gray;
+  border: none;
 }
 
 QLabel#label_opir {
-     min-width: 300px;
-     min-height: 25px;
-     font-size: 25px;
-     color: rgb(100 ,100, 100);
+  min-width: 300px;
+  min-height: 25px;
+  font-size: 25px;
+  color: rgb(100, 100, 100);
 }
 
 QPushButton {
@@ -41,9 +39,8 @@ QPushButton {
 }
 
 QPushButton::hover {
-    background-color : rgb(38, 38, 38)
+  background-color: rgb(38, 38, 38);
 }
-
 
 QComboBox {
   color: white;
@@ -61,7 +58,7 @@ QComboBox QListView {
   color: black;
 }
 
-QComboBox#history{
+QComboBox#history {
   background: rgb(50, 50, 50);
   color: white;
   border-radius: 15px;
@@ -69,10 +66,10 @@ QComboBox#history{
   font-size: 17px;
   min-height: 35px;
   min-width: 35px;
-  max-width: 35px
+  max-width: 35px;
 }
-QComboBox#history::hover{
-   background-color : rgb(38, 38, 38)
+QComboBox#history::hover {
+  background-color: rgb(38, 38, 38);
 }
 
 QPushButton#del {
@@ -82,27 +79,33 @@ QPushButton#del {
   font-size: 17px;
   min-height: 35px;
   min-width: 35px;
-  max-width: 35px
+  max-width: 35px;
 }
 
 QPushButton#divid {
-    color:  rgb(50, 50, 50);
-    padding-left: 2px;
-    font-size: 1px;
+  color: rgb(50, 50, 50);
+  padding-left: 2px;
+  font-size: 1px;
 }
-QPushButton#divid::hover {color: rgb(38, 38, 38);}
+QPushButton#divid::hover {
+  color: rgb(38, 38, 38);
+}
 
 QPushButton#mul {
-    color:  rgb(50, 50, 50);
-    padding-left: 2px;
-    font-size: 1px;
+  color: rgb(50, 50, 50);
+  padding-left: 2px;
+  font-size: 1px;
 }
-QPushButton#mul::hover {color: rgb(38, 38, 38);}
+QPushButton#mul::hover {
+  color: rgb(38, 38, 38);
+}
 
-QPushButton#equally {background-color: #6666FF;}
-QPushButton#DelAll {color: #D92B4F;}
-
-
+QPushButton#equally {
+  background-color: #6666ff;
+}
+QPushButton#DelAll {
+  color: #d92b4f;
+}
 
 QComboBox#history QListView {
   border-radius: 10%;
@@ -112,7 +115,7 @@ QComboBox#history QListView {
   min-width: 300px;
 }
 
-QLabel#label{
+QLabel#label {
   min-width: 250px;
   min-height: 30px;
   max-height: 70px;
@@ -128,27 +131,40 @@ QLineEdit {
   font-size: 30px;
   border: 1px solid aqua;
   border-radius: 15px;
-
 }
 QSpinBox {
-    max-width: 43px;
-    max-height: 30px;
-    font-size: 17px;
-    color: white;
-    background-color: rgb(25, 25, 25);
-    border: gray;
+  max-width: 43px;
+  max-height: 30px;
+  font-size: 17px;
+  color: white;
+  background-color: rgb(25, 25, 25);
+  border: gray;
 }
-
 
 QWidget#windowHistory {
-   background: white;
+  background: white;
 }
 
-QPushButton#resultNumbers{
-    background-color: #6666FF;
-    min-height: 107px;
-    max-height: 140px;
-    font-size: 40px;
+QPushButton#resultNumbers {
+  background-color: #6666ff;
+  min-height: 107px;
+  max-height: 140px;
+  font-size: 40px;
 }
 
+QComboBox#sysNum {
+  max-width: 43px;
+  max-height: 30px;
+  font-size: 20px;
+  color: white;
+  background-color: rgb(25, 25, 25);
+  border: gray;
+}
 
+QComboBox#sysNum QListView {
+  border-radius: 10%;
+  padding: 5px;
+  background-color: white;
+  color: black;
+  font-size: 17px;
+}
